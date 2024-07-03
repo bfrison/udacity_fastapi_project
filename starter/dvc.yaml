@@ -1,0 +1,8 @@
+stages:
+  preprocessing:
+    cmd: python preprocessing.py
+    deps:
+    - data/census.csv
+    - preprocessing.py
+    outs:
+    - data/clean_census.csv
