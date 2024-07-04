@@ -1,0 +1,16 @@
+columns:
+  # education was dropped since it contains no independant information relative to education-num
+  categorical:
+    - workclass
+    - marital-status
+    - occupation
+    - relationship
+    - race
+    - sex
+    - native-country
+  numerical:
+    - age
+    - education-num
+    - capital-gain
+    - capital-loss
+    - hours-per-week
