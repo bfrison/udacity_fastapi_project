@@ -14,3 +14,7 @@ columns:
     - capital-gain
     - capital-loss
     - hours-per-week
+model:
+  parameters:
+    C: 1.0
+    penalty: l2

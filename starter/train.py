@@ -14,10 +14,11 @@ from sklearn.model_selection import train_test_split
 import yaml
 
 
-with open('model_params.yaml', encoding='utf-8') as f:
+with open('parameters.yaml', encoding='utf-8') as f:
     params = yaml.safe_load(f)
 
-C = params['C']
+C = params['model']['parameters']['C']
+penalty = params['model']['parameters']['penalty']
 
 
 if __name__ == '__main__':
@@ -27,7 +28,7 @@ if __name__ == '__main__':
         df, y, test_size=0.2, random_state=42
     )
 
-    lr = LogisticRegression(C=C)
+    lr = LogisticRegression(C=C, penalty=penalty, max_iter=1000)
     lr.fit(X_train, y_train)
 
     y_pred = lr.predict(X_test)

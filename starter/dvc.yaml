@@ -19,8 +19,9 @@ stages:
     - data/eng_census.gz
     - train.py
     params:
-    - model_params.yaml:
-      - C
+    - parameters.yaml:
+      - model.parameters.C
+      - model.parameters.penalty
     outs:
     - model/logistic_regression.pkl
     metrics:
