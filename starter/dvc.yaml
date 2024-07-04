@@ -13,3 +13,16 @@ stages:
     - feature_engineering.py
     outs:
     - data/eng_census.gz
+  train:
+    cmd: python train.py
+    deps:
+    - data/eng_census.gz
+    - train.py
+    params:
+    - model_params.yaml:
+      - C
+    outs:
+    - model/logistic_regression.pkl
+    metrics:
+    - model/score.json:
+        cache: false

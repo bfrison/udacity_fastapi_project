@@ -5,7 +5,11 @@ dataframe
 
 import pandas as pd
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import (
+    FunctionTransformer,
+    OneHotEncoder,
+    StandardScaler,
+)
 import yaml
 
 with open('parameters.yaml', encoding='utf-8') as f:
@@ -24,6 +28,14 @@ def apply_feature_engineering(df):
         [
             ('one_hot_encoder', OneHotEncoder(sparse_output=False), cat_cols),
             ('standard_scaler', StandardScaler(), num_cols),
+            (
+                'target',
+                FunctionTransformer(
+                    lambda vals: (vals == '>50K').astype(int),
+                    feature_names_out='one-to-one',
+                ),
+                ['salary'],
+            ),
         ]
     )
     col_transf.fit(df)
