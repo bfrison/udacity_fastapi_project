@@ -33,3 +33,9 @@ def apply_feature_engineering(df):
     ).convert_dtypes()
 
     return df_eng
+
+
+if __name__ == '__main__':
+    df = pd.read_csv('data/clean_census.gz')
+    df_eng = apply_feature_engineering(df)
+    df_eng.to_csv('data/eng_census.gz', index=False)

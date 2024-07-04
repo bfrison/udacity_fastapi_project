@@ -1,2 +1,2 @@
 [MESSAGE CONTROL]
-disable: C0103
+disable: C0103,W0621
