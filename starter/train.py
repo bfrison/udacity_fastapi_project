@@ -28,7 +28,7 @@ if __name__ == '__main__':
         df, y, test_size=0.2, random_state=42
     )
 
-    lr = LogisticRegression(C=C, penalty=penalty, max_iter=1000)
+    lr = LogisticRegression(C=C, penalty=penalty, max_iter=1000, solver='saga')
     lr.fit(X_train, y_train)
 
     y_pred = lr.predict(X_test)
