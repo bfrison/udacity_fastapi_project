@@ -6,17 +6,10 @@ stages:
     - preprocessing.py
     outs:
     - data/clean_census.gz
-  feature_engineering:
-    cmd: python feature_engineering.py
-    deps:
-    - data/clean_census.gz
-    - feature_engineering.py
-    outs:
-    - data/eng_census.gz
   train:
     cmd: python train.py
     deps:
-    - data/eng_census.gz
+    - data/clean_census.gz
     - train.py
     params:
     - parameters.yaml:
