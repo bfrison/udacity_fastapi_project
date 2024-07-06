@@ -28,7 +28,9 @@ C = params['model']['parameters']['C']
 penalty = params['model']['parameters']['penalty']
 
 
-def create_pipeline(cat_cols: list, num_cols: list, C: float, penalty: str) -> Pipeline:
+def create_pipeline(
+    cat_cols: list, num_cols: list, C: float, penalty: str
+) -> Pipeline:
     '''
     This function returns the pipeline that will be applied on preprocessed data
     '''
@@ -59,6 +61,23 @@ def create_pipeline(cat_cols: list, num_cols: list, C: float, penalty: str) -> P
     return pipeline
 
 
+def train(model: Pipeline, X: pd.DataFrame, y: pd.Series) -> Pipeline:
+    '''
+    This function trains a given pipeline on the data passed as arguments
+    '''
+    return model.fit(X, y)
+
+
+def score(
+    model: Pipeline, X: pd.DataFrame, y_true: pd.Series, pos_label: str = '>50K'
+) -> float:
+    '''
+    This function uses f1_scoring to score a given pipeline on the data passed
+    as arguments
+    '''
+    return f1_score(y_true, model.predict(X), pos_label=pos_label)
+
+
 if __name__ == '__main__':
     df = pd.read_csv('data/clean_census.gz').convert_dtypes()
     y = df.pop('salary')
@@ -67,13 +86,13 @@ if __name__ == '__main__':
     )
 
     pipeline = create_pipeline(cat_cols, num_cols, C, penalty)
-    pipeline.fit(X_train, y_train)
 
-    y_pred = pipeline.predict(X_test)
-    score = f1_score(y_test, y_pred, pos_label='>50K')
+    pipeline = train(pipeline, X_train, y_train)
+
+    f1_score_val = score(pipeline, X_test, y_test)
 
     with open('model/score.json', 'w', encoding='utf-8') as f:
-        json.dump({'f1_score': score}, f)
+        json.dump({'f1_score': f1_score_val}, f)
 
     with open('model/logistic_regression.pkl', 'wb') as f:
         pickle.dump(pipeline, f)
