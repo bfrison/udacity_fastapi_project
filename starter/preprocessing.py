@@ -1,5 +1,5 @@
 '''
-This script deduplicates rows from census.csv and stores the results as clean_census.csv
+This script deduplicates rows from census.csv and stores the results as clean_census.gz
 '''
 
 import os

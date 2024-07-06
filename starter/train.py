@@ -28,7 +28,7 @@ C = params['model']['parameters']['C']
 penalty = params['model']['parameters']['penalty']
 
 
-def create_pipeline(cat_cols, num_cols, C, penalty):
+def create_pipeline(cat_cols: list, num_cols: list, C: float, penalty: str) -> Pipeline:
     '''
     This function returns the pipeline that will be applied on preprocessed data
     '''
