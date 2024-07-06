@@ -68,6 +68,15 @@ def train(model: Pipeline, X: pd.DataFrame, y: pd.Series) -> Pipeline:
     return model.fit(X, y)
 
 
+def infer(model: Pipeline, X: pd.DataFrame) -> pd.Series:
+    '''
+    This function infers results from the model and data passed as arguments
+    '''
+    y_pred = pd.Series(model.predict(X), index=X.index, name='salary_pred')
+
+    return y_pred
+
+
 def score(
     model: Pipeline, X: pd.DataFrame, y_true: pd.Series, pos_label: str = '>50K'
 ) -> float:
@@ -75,7 +84,24 @@ def score(
     This function uses f1_scoring to score a given pipeline on the data passed
     as arguments
     '''
-    return f1_score(y_true, model.predict(X), pos_label=pos_label)
+    return f1_score(y_true, infer(model, X), pos_label=pos_label)
+
+
+def score_strata(
+    model: Pipeline, X: pd.DataFrame, y: pd.Series, column: str
+) -> pd.Series:
+    '''
+    This function scores stratifies the data based on the columns passed as an
+    argument and scores each stratum separately
+    '''
+    scores_dict = {}
+    for val, idxs in X.groupby(column).groups.items():
+        X_slice = X.loc[idxs]
+        y_slice = y.loc[idxs]
+        f1_score_val = score(model, X_slice, y_slice)
+        scores_dict[val] = f1_score_val
+
+    return pd.Series(scores_dict)
 
 
 if __name__ == '__main__':

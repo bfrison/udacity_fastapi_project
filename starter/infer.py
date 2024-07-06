@@ -6,16 +6,8 @@ import pickle
 
 import os
 import pandas as pd
-from sklearn.pipeline import Pipeline
 
-
-def infer(model: Pipeline, X: pd.DataFrame) -> pd.Series:
-    '''
-    This function infers results from the model and data passed as arguments
-    '''
-    y_pred = pd.Series(model.predict(X), index=X.index, name='salary_pred')
-
-    return y_pred
+from train import infer
 
 
 if __name__ == '__main__':

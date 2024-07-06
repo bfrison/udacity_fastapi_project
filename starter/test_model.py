@@ -4,9 +4,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 import yaml
 
-from infer import infer
 from preprocessing import preprocessing
-from train import create_pipeline, score, train
+from train import create_pipeline, infer, score, score_strata, train
 
 @pytest.fixture
 def data_dir():
@@ -82,3 +81,10 @@ def test_infer(trained_pipeline, df_clean, salary):
 
     assert isinstance(y_pred, pd.Series), 'Inferred data is not in the Pandas Series format'
     assert set(y_pred) == set(salary), 'The set of inferred values does not correspond to original target data'
+
+def test_score_strata(trained_pipeline, df_clean, salary):
+
+    scores = score_strata(trained_pipeline, df_clean, salary, 'sex')
+
+    assert isinstance(scores, pd.Series), 'Scores are not in the Pandas Series Format'
+    assert set(df_clean['sex']) == set(scores.index), 'Values in stratum do not correspond to values in original data'
