@@ -5,8 +5,8 @@ from sklearn.pipeline import Pipeline
 import yaml
 
 from preprocessing import preprocessing
-from starter.ml.model import create_pipeline, inference, train_model
-from train import score, score_strata
+from starter.ml.model import compute_model_metrics, create_pipeline, inference, train_model
+from train import score_strata
 
 @pytest.fixture
 def data_dir():
@@ -53,7 +53,7 @@ def test_preprocessing_dataframe(df_clean):
 
     assert isinstance(df_clean, pd.DataFrame), 'Data is not in the Pandas DataFrame format'
     assert len(df_clean) > 0, 'Data contains now rows'
-    assert 'salary' in df_clean, 'Data does not containt the \'salary\' target column'
+    assert 'salary' in df_clean, 'Data does not contain the \'salary\' target column'
 
 def test_preprocessing_deduplication(df_clean):
 
@@ -70,11 +70,14 @@ def test_train(trained_pipeline):
 
     assert trained_pipeline.__sklearn_is_fitted__(), 'Model is not fitted after training'
 
-def test_score(trained_pipeline, df_clean, salary):
+def test_compute_model_metrics(trained_pipeline, df_clean, salary):
 
-    f1_score_val = score(trained_pipeline, df_clean, salary)
+    score_vals = compute_model_metrics(trained_pipeline, df_clean, salary)
 
-    assert isinstance(f1_score_val, float), 'F1 score is not a float'
+    assert isinstance(score_vals, dict), 'Scores values are not a dictionary'
+    assert 'f1_score' in score_vals, 'F1 score not in score values'
+    assert 'precision_score' in score_vals, 'Precision score not in score values'
+    assert 'recall_score' in score_vals, 'Recall score not in score values'
 
 def test_inference(trained_pipeline, df_clean, salary):
 

@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import fbeta_score, precision_score, recall_score
+from sklearn.metrics import f1_score, precision_score, recall_score
 from sklearn.pipeline import make_pipeline, Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 import yaml
@@ -57,26 +57,23 @@ def train_model(model: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame) -
     return model.fit(X_train, y_train)
 
 
-def compute_model_metrics(y, preds):
-    """
-    Validates the trained machine learning model using precision, recall, and F1.
+def compute_model_metrics(model: Pipeline, X: pd.DataFrame, y_true: pd.Series, pos_label: str = '>50K') -> dict:
+    '''
+    This function uses f1_scoring, precision and recall to score a given
+    pipeline on the data passed as arguments
+    '''
+    y_pred = inference(model, X)
 
-    Inputs
-    ------
-    y : np.array
-        Known labels, binarized.
-    preds : np.array
-        Predicted labels, binarized.
-    Returns
-    -------
-    precision : float
-    recall : float
-    fbeta : float
-    """
-    fbeta = fbeta_score(y, preds, beta=1, zero_division=1)
-    precision = precision_score(y, preds, zero_division=1)
-    recall = recall_score(y, preds, zero_division=1)
-    return precision, recall, fbeta
+    f1 = f1_score(y_true, y_pred, pos_label=pos_label, zero_division=1)
+    precision = precision_score(y_true, y_pred, pos_label=pos_label, zero_division=1)
+    recall = recall_score(y_true, y_pred, pos_label=pos_label, zero_division=1)
+
+    scores = {
+        'f1_score': f1,
+        'precision_score': precision,
+        'recall_score': recall,
+    }
+    return scores
 
 
 def inference(model:Pipeline, X: pd.DataFrame) -> pd.Series:

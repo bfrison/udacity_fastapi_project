@@ -22,4 +22,4 @@ jobs:
     - name: Run unit tests on repository
       run: |
         cd starter
-        pytest -v test_model.py
+        pytest test_model.py
