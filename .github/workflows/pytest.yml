@@ -21,4 +21,5 @@ jobs:
         pip install -r requirements.txt
     - name: Run unit tests on repository
       run: |
+        cd starter
         pytest -v test_model.py
