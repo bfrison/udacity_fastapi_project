@@ -1,7 +1,7 @@
 import pytest
 import yaml
 
-from preprocessing import preprocessing
+from starter.ml.data import process_data
 from starter.ml.model import create_pipeline, train_model
 
 scores = ['f1_score', 'precision_score', 'recall_score']
@@ -19,7 +19,7 @@ def input_file():
 
 @pytest.fixture
 def df_clean(data_dir, input_file):
-    return preprocessing(data_dir, input_file).head(10)
+    return process_data(data_dir, input_file).head(10)
 
 
 @pytest.fixture

@@ -1,9 +1,9 @@
 stages:
   preprocessing:
-    cmd: python preprocessing.py
+    cmd: python starter/ml/data.py
     deps:
     - data/census.csv
-    - preprocessing.py
+    - starter/ml/data.py
     outs:
     - data/clean_census.gz
   train_model:
