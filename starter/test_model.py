@@ -5,8 +5,7 @@ from sklearn.pipeline import Pipeline
 import yaml
 
 from preprocessing import preprocessing
-from starter.ml.model import compute_model_metrics, create_pipeline, inference, train_model
-from train import score_strata
+from starter.ml.model import compute_model_metrics, create_pipeline, inference, score_strata, train_model
 
 @pytest.fixture
 def data_dir():
@@ -49,6 +48,8 @@ def trained_pipeline(pipeline, df_clean, salary):
 
     return pipeline
 
+scores = ['f1_score', 'precision_score', 'recall_score']
+
 def test_preprocessing_dataframe(df_clean):
 
     assert isinstance(df_clean, pd.DataFrame), 'Data is not in the Pandas DataFrame format'
@@ -70,7 +71,7 @@ def test_train(trained_pipeline):
 
     assert trained_pipeline.__sklearn_is_fitted__(), 'Model is not fitted after training'
 
-@pytest.mark.parametrize('score', ['f1_score', 'precision_score', 'recall_score']) 
+@pytest.mark.parametrize('score', scores)
 def test_compute_model_metrics(trained_pipeline, df_clean, salary, score):
 
     score_vals = compute_model_metrics(trained_pipeline, df_clean, salary)
@@ -85,9 +86,18 @@ def test_inference(trained_pipeline, df_clean, salary):
     assert isinstance(y_pred, pd.Series), 'Inferred data is not in the Pandas Series format'
     assert set(y_pred) == set(salary), 'The set of inferred values does not correspond to original target data'
 
-def test_score_strata(trained_pipeline, df_clean, salary):
+def test_score_strata_vals(trained_pipeline, df_clean, salary):
 
-    scores = score_strata(trained_pipeline, df_clean, salary, 'sex')
+    stratum_dict = score_strata(trained_pipeline, df_clean, salary, 'sex')
 
-    assert isinstance(scores, pd.Series), 'Scores are not in the Pandas Series Format'
-    assert set(df_clean['sex']) == set(scores.index), 'Values in stratum do not correspond to values in original data'
+    assert isinstance(stratum_dict, dict), 'Scores are not in the Pandas Series Format'
+    assert set(df_clean['sex']) == set(stratum_dict.keys()), 'Values in stratum do not correspond to values in original data'
+
+@pytest.mark.parametrize('score', scores)
+def test_score_strata_scores(trained_pipeline, df_clean, salary, score):
+
+    stratum_dict = score_strata(trained_pipeline, df_clean, salary, 'sex')
+    scores_dict = next(iter(stratum_dict.values()))
+
+    assert f'{score}' in scores_dict, f'{score} not in score values'
+    assert isinstance(scores_dict[f'{score}'], float), f'{score} is not a float'

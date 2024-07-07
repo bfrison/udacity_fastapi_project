@@ -83,3 +83,20 @@ def inference(model:Pipeline, X: pd.DataFrame) -> pd.Series:
     y_pred = pd.Series(model.predict(X), index=X.index, name='salary_pred')
 
     return y_pred
+
+
+def score_strata(
+    model: Pipeline, X: pd.DataFrame, y: pd.Series, column: str
+) -> dict:
+    '''
+    This function scores stratifies the data based on the columns passed as an
+    argument and scores each stratum separately
+    '''
+    scores_dict = {}
+    for val, idxs in X.groupby(column).groups.items():
+        X_slice = X.loc[idxs]
+        y_slice = y.loc[idxs]
+        scores = compute_model_metrics(model, X_slice, y_slice)
+        scores_dict[val] = scores
+
+    return scores_dict
