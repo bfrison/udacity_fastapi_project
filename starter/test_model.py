@@ -70,14 +70,13 @@ def test_train(trained_pipeline):
 
     assert trained_pipeline.__sklearn_is_fitted__(), 'Model is not fitted after training'
 
-def test_compute_model_metrics(trained_pipeline, df_clean, salary):
+@pytest.mark.parametrize('score', ['f1_score', 'precision_score', 'recall_score']) 
+def test_compute_model_metrics(trained_pipeline, df_clean, salary, score):
 
     score_vals = compute_model_metrics(trained_pipeline, df_clean, salary)
 
-    assert isinstance(score_vals, dict), 'Scores values are not a dictionary'
-    assert 'f1_score' in score_vals, 'F1 score not in score values'
-    assert 'precision_score' in score_vals, 'Precision score not in score values'
-    assert 'recall_score' in score_vals, 'Recall score not in score values'
+    assert f'{score}' in score_vals, f'{score} not in score values'
+    assert isinstance(score_vals[f'{score}'], float), f'{score} is not a float'
 
 def test_inference(trained_pipeline, df_clean, salary):
 
