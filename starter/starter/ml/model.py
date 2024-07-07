@@ -1,3 +1,8 @@
+'''
+This utility module contains various functions related to the machine learning
+model
+'''
+
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -50,14 +55,19 @@ def create_pipeline(
 
     return pipeline
 
-def train_model(model: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame) -> Pipeline:
+
+def train_model(
+    model: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame
+) -> Pipeline:
     '''
     This function trains a given pipeline on the data passed as arguments
     '''
     return model.fit(X_train, y_train)
 
 
-def compute_model_metrics(model: Pipeline, X: pd.DataFrame, y_true: pd.Series, pos_label: str = '>50K') -> dict:
+def compute_model_metrics(
+    model: Pipeline, X: pd.DataFrame, y_true: pd.Series, pos_label: str = '>50K'
+) -> dict:
     '''
     This function uses f1_scoring, precision and recall to score a given
     pipeline on the data passed as arguments
@@ -65,7 +75,9 @@ def compute_model_metrics(model: Pipeline, X: pd.DataFrame, y_true: pd.Series, p
     y_pred = inference(model, X)
 
     f1 = f1_score(y_true, y_pred, pos_label=pos_label, zero_division=1)
-    precision = precision_score(y_true, y_pred, pos_label=pos_label, zero_division=1)
+    precision = precision_score(
+        y_true, y_pred, pos_label=pos_label, zero_division=1
+    )
     recall = recall_score(y_true, y_pred, pos_label=pos_label, zero_division=1)
 
     scores = {
@@ -76,7 +88,7 @@ def compute_model_metrics(model: Pipeline, X: pd.DataFrame, y_true: pd.Series, p
     return scores
 
 
-def inference(model:Pipeline, X: pd.DataFrame) -> pd.Series:
+def inference(model: Pipeline, X: pd.DataFrame) -> pd.Series:
     '''
     This function infers results from the model and data passed as arguments
     '''
