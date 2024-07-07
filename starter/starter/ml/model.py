@@ -51,9 +51,9 @@ def create_pipeline(
     return pipeline
 
 def train_model(model: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame) -> Pipeline:
-    """
+    '''
     This function trains a given pipeline on the data passed as arguments
-    """
+    '''
     return model.fit(X_train, y_train)
 
 
@@ -79,18 +79,10 @@ def compute_model_metrics(y, preds):
     return precision, recall, fbeta
 
 
-def inference(model, X):
-    """ Run model inferences and return the predictions.
+def inference(model:Pipeline, X: pd.DataFrame) -> pd.Series:
+    '''
+    This function infers results from the model and data passed as arguments
+    '''
+    y_pred = pd.Series(model.predict(X), index=X.index, name='salary_pred')
 
-    Inputs
-    ------
-    model : ???
-        Trained machine learning model.
-    X : np.array
-        Data used for prediction.
-    Returns
-    -------
-    preds : np.array
-        Predictions from the model.
-    """
-    pass
+    return y_pred

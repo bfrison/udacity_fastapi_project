@@ -5,8 +5,8 @@ from sklearn.pipeline import Pipeline
 import yaml
 
 from preprocessing import preprocessing
-from starter.ml.model import create_pipeline, train_model
-from train import infer, score, score_strata
+from starter.ml.model import create_pipeline, inference, train_model
+from train import score, score_strata
 
 @pytest.fixture
 def data_dir():
@@ -76,9 +76,9 @@ def test_score(trained_pipeline, df_clean, salary):
 
     assert isinstance(f1_score_val, float), 'F1 score is not a float'
 
-def test_infer(trained_pipeline, df_clean, salary):
+def test_inference(trained_pipeline, df_clean, salary):
 
-    y_pred = infer(trained_pipeline, df_clean)
+    y_pred = inference(trained_pipeline, df_clean)
 
     assert isinstance(y_pred, pd.Series), 'Inferred data is not in the Pandas Series format'
     assert set(y_pred) == set(salary), 'The set of inferred values does not correspond to original target data'
