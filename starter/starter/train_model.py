@@ -1,28 +1,38 @@
 # Script to train machine learning model.
+import json
+import os
+import pickle
 
+import pandas as pd
 from sklearn.model_selection import train_test_split
+import yaml
 
-# Add the necessary imports for the starter code.
+from ml.model import compute_model_metrics, create_pipeline, train_model
 
-# Add code to load in the data.
+with open('parameters.yaml', encoding='utf-8') as f:
+    params = yaml.safe_load(f)
 
-# Optional enhancement, use K-fold cross validation instead of a train-test split.
-train, test = train_test_split(data, test_size=0.20)
+cat_cols = params['columns']['categorical']
+num_cols = params['columns']['numerical']
 
-cat_features = [
-    "workclass",
-    "education",
-    "marital-status",
-    "occupation",
-    "relationship",
-    "race",
-    "sex",
-    "native-country",
-]
-X_train, y_train, encoder, lb = process_data(
-    train, categorical_features=cat_features, label="salary", training=True
-)
+C = params['model']['parameters']['C']
+penalty = params['model']['parameters']['penalty']
 
-# Proces the test data with the process_data function.
-
-# Train and save a model.
+if __name__ == '__main__':
+    df_clean = pd.read_csv(os.path.join('data', 'clean_census.gz'))
+    y = df_clean.pop('salary')
+    
+    # Optional enhancement, use K-fold cross validation instead of a train-test split.
+    X_train, X_test, y_train, y_test = train_test_split(df_clean, y, test_size=0.2, random_state=42)
+    
+    pipeline = create_pipeline(cat_cols, num_cols, C, penalty)
+    
+    pipeline = train_model(pipeline, X_train, y_train)
+    
+    scores = compute_model_metrics(pipeline, X_test, y_test)
+    
+    with open(os.path.join('model', 'score.json'), 'w', encoding='utf-8') as f:
+            json.dump(scores, f)
+    
+    with open('model/logistic_regression.pkl', 'wb') as f:
+            pickle.dump(pipeline, f)

@@ -6,11 +6,11 @@ stages:
     - preprocessing.py
     outs:
     - data/clean_census.gz
-  train:
-    cmd: python train.py
+  train_model:
+    cmd: python starter/train_model.py
     deps:
     - data/clean_census.gz
-    - train.py
+    - starter/train_model.py
     params:
     - parameters.yaml:
       - model.parameters.C
