@@ -5,7 +5,8 @@ from sklearn.pipeline import Pipeline
 import yaml
 
 from preprocessing import preprocessing
-from train import create_pipeline, infer, score, score_strata, train
+from starter.ml.model import create_pipeline, train_model
+from train import infer, score, score_strata
 
 @pytest.fixture
 def data_dir():
@@ -44,7 +45,7 @@ def pipeline(parameters):
 
 @pytest.fixture
 def trained_pipeline(pipeline, df_clean, salary):
-    pipeline = train(pipeline, df_clean, salary)
+    pipeline = train_model(pipeline, df_clean, salary)
 
     return pipeline
 

@@ -1,24 +1,60 @@
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import fbeta_score, precision_score, recall_score
+from sklearn.pipeline import make_pipeline, Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+import yaml
 
 
-# Optional: implement hyperparameter tuning.
-def train_model(X_train, y_train):
+with open('parameters.yaml', encoding='utf-8') as f:
+    params = yaml.safe_load(f)
+
+cat_cols = params['columns']['categorical']
+num_cols = params['columns']['numerical']
+
+C = params['model']['parameters']['C']
+penalty = params['model']['parameters']['penalty']
+
+
+def create_pipeline(
+    cat_cols: list, num_cols: list, C: float, penalty: str
+) -> Pipeline:
+    '''
+    This function returns the pipeline that will be applied on preprocessed data
+    '''
+    col_transf = ColumnTransformer(
+        [
+            (
+                'one_hot_encoder',
+                make_pipeline(
+                    SimpleImputer(
+                        missing_values=pd.NA,
+                        strategy='constant',
+                        fill_value='Unknown',
+                    ),
+                    OneHotEncoder(sparse_output=False),
+                ),
+                cat_cols,
+            ),
+            ('standard_scaler', StandardScaler(), num_cols),
+        ]
+    )
+
+    lr = LogisticRegression(C=C, penalty=penalty, max_iter=1000, solver='saga')
+
+    pipeline = Pipeline(
+        [('column_transformer', col_transf), ('logistic_regressor', lr)]
+    )
+
+    return pipeline
+
+def train_model(model: Pipeline, X_train: pd.DataFrame, y_train: pd.DataFrame) -> Pipeline:
     """
-    Trains a machine learning model and returns it.
-
-    Inputs
-    ------
-    X_train : np.array
-        Training data.
-    y_train : np.array
-        Labels.
-    Returns
-    -------
-    model
-        Trained machine learning model.
+    This function trains a given pipeline on the data passed as arguments
     """
-
-    pass
+    return model.fit(X_train, y_train)
 
 
 def compute_model_metrics(y, preds):

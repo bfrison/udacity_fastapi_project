@@ -28,44 +28,44 @@ C = params['model']['parameters']['C']
 penalty = params['model']['parameters']['penalty']
 
 
-def create_pipeline(
-    cat_cols: list, num_cols: list, C: float, penalty: str
-) -> Pipeline:
-    '''
-    This function returns the pipeline that will be applied on preprocessed data
-    '''
-    col_transf = ColumnTransformer(
-        [
-            (
-                'one_hot_encoder',
-                make_pipeline(
-                    SimpleImputer(
-                        missing_values=pd.NA,
-                        strategy='constant',
-                        fill_value='Unknown',
-                    ),
-                    OneHotEncoder(sparse_output=False),
-                ),
-                cat_cols,
-            ),
-            ('standard_scaler', StandardScaler(), num_cols),
-        ]
-    )
-
-    lr = LogisticRegression(C=C, penalty=penalty, max_iter=1000, solver='saga')
-
-    pipeline = Pipeline(
-        [('column_transformer', col_transf), ('logistic_regressor', lr)]
-    )
-
-    return pipeline
-
-
-def train(model: Pipeline, X: pd.DataFrame, y: pd.Series) -> Pipeline:
-    '''
-    This function trains a given pipeline on the data passed as arguments
-    '''
-    return model.fit(X, y)
+# def create_pipeline(
+#     cat_cols: list, num_cols: list, C: float, penalty: str
+# ) -> Pipeline:
+#     '''
+#     This function returns the pipeline that will be applied on preprocessed data
+#     '''
+#     col_transf = ColumnTransformer(
+#         [
+#             (
+#                 'one_hot_encoder',
+#                 make_pipeline(
+#                     SimpleImputer(
+#                         missing_values=pd.NA,
+#                         strategy='constant',
+#                         fill_value='Unknown',
+#                     ),
+#                     OneHotEncoder(sparse_output=False),
+#                 ),
+#                 cat_cols,
+#             ),
+#             ('standard_scaler', StandardScaler(), num_cols),
+#         ]
+#     )
+# 
+#     lr = LogisticRegression(C=C, penalty=penalty, max_iter=1000, solver='saga')
+# 
+#     pipeline = Pipeline(
+#         [('column_transformer', col_transf), ('logistic_regressor', lr)]
+#     )
+# 
+#     return pipeline
+# 
+# 
+# def train(model: Pipeline, X: pd.DataFrame, y: pd.Series) -> Pipeline:
+#     '''
+#     This function trains a given pipeline on the data passed as arguments
+#     '''
+#     return model.fit(X, y)
 
 
 def infer(model: Pipeline, X: pd.DataFrame) -> pd.Series:
