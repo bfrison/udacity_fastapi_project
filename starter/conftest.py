@@ -1,6 +1,8 @@
+from fastapi.testclient import TestClient
 import pytest
 import yaml
 
+from main import app
 from starter.ml.data import process_data
 from starter.ml.model import create_pipeline, train_model
 
@@ -53,3 +55,8 @@ def trained_pipeline(pipeline, df_clean, salary):
     pipeline = train_model(pipeline, df_clean, salary)
 
     return pipeline
+
+
+@pytest.fixture
+def client():
+    return TestClient(app)

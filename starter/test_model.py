@@ -89,3 +89,11 @@ def test_score_strata_scores(trained_pipeline, df_clean, salary, score):
 
     assert f'{score}' in scores_dict, f'{score} not in score values'
     assert isinstance(scores_dict[f'{score}'], float), f'{score} is not a float'
+
+
+def test_greet(client):
+
+    response = client.get('/')
+
+    assert response.status_code == 200
+    assert response.text.split(' ')[0] == 'Welcome'
