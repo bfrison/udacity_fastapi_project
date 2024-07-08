@@ -98,17 +98,20 @@ def inference(model: Pipeline, X: pd.DataFrame) -> pd.Series:
 
 
 def score_strata(
-    model: Pipeline, X: pd.DataFrame, y: pd.Series, column: str
+    model: Pipeline, X: pd.DataFrame, y: pd.Series, columns: list[str]
 ) -> dict:
     '''
     This function scores stratifies the data based on the columns passed as an
     argument and scores each stratum separately
     '''
-    scores_dict = {}
-    for val, idxs in X.groupby(column).groups.items():
-        X_slice = X.loc[idxs]
-        y_slice = y.loc[idxs]
-        scores = compute_model_metrics(model, X_slice, y_slice)
-        scores_dict[val] = scores
+    score_vals = {}
+    for col in columns:
+        scores_dict = {}
+        for val, idxs in X.groupby(col).groups.items():
+            X_slice = X.loc[idxs]
+            y_slice = y.loc[idxs]
+            scores = compute_model_metrics(model, X_slice, y_slice)
+            scores_dict[val] = scores
+        score_vals[col] = scores_dict
 
-    return scores_dict
+    return score_vals

@@ -65,22 +65,26 @@ def test_inference(trained_pipeline, df_clean, salary):
     ), 'The set of inferred values does not correspond to original target data'
 
 
-def test_score_strata_vals(trained_pipeline, df_clean, salary):
+@pytest.mark.parametrize('column', ['sex', 'race', 'workclass'])
+def test_score_strata_vals(trained_pipeline, df_clean, salary, column):
 
-    stratum_dict = score_strata(trained_pipeline, df_clean, salary, 'sex')
+    columns_dict = score_strata(trained_pipeline, df_clean, salary, [column])
+    stratum_dict = columns_dict[column]
 
     assert isinstance(
         stratum_dict, dict
-    ), 'Scores are not in the Pandas Series Format'
-    assert set(df_clean['sex']) == set(
-        stratum_dict.keys()
-    ), 'Values in stratum do not correspond to values in original data'
+    ), 'Scores are not in the dictionary format'
+    assert set(df_clean[column]) == set(stratum_dict.keys()), (
+        'Values in stratum do not correspond to values in original'
+        f'`{column}` data'
+    )
 
 
 @pytest.mark.parametrize('score', scores)
 def test_score_strata_scores(trained_pipeline, df_clean, salary, score):
 
-    stratum_dict = score_strata(trained_pipeline, df_clean, salary, 'sex')
+    columns_dict = score_strata(trained_pipeline, df_clean, salary, ['sex'])
+    stratum_dict = columns_dict['sex']
     scores_dict = next(iter(stratum_dict.values()))
 
     assert f'{score}' in scores_dict, f'{score} not in score values'
