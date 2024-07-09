@@ -1,10 +1,13 @@
+import os
+import pickle
+
 from fastapi.testclient import TestClient
 import pytest
 import yaml
 
 from main import app
 from starter.ml.data import process_data
-from starter.ml.model import create_pipeline, train_model
+from starter.ml.model import create_pipeline
 
 scores = ['f1_score', 'precision_score', 'recall_score']
 
@@ -51,8 +54,9 @@ def pipeline(parameters):
 
 
 @pytest.fixture
-def trained_pipeline(pipeline, df_clean, salary):
-    pipeline = train_model(pipeline, df_clean, salary)
+def trained_pipeline(pipeline):
+    with open(os.path.join('model', 'logistic_regression.pkl'), 'rb') as f:
+        pipeline = pickle.load(f)
 
     return pipeline
 

@@ -97,3 +97,34 @@ def test_greet(client):
 
     assert response.status_code == 200
     assert response.text.split(' ')[0] == 'Welcome'
+
+
+def test_infer(client, df_clean, trained_pipeline):
+
+    data = df_clean.to_dict(orient='records')
+
+    y_pred_model = inference(trained_pipeline, df_clean)
+
+    response = client.post('/infer/', json=data)
+
+    y_pred_api = response.json()
+
+    assert response.status_code == 200
+    assert isinstance(y_pred_api, list), 'Response is not in list format'
+    assert len(df_clean) == len(
+        y_pred_api
+    ), 'Response is not the same length as body data'
+    assert (
+        y_pred_model == y_pred_api
+    ).all(), 'Response predictions do not match model\'s predictions'
+
+
+def test_infer_missing_col(client, df_clean):
+
+    data = df_clean.drop('age', axis=1).to_dict(orient='records')
+
+    response = client.post('/infer/', json=data)
+
+    assert (
+        response.status_code == 422
+    ), 'API should return status code 422 if column is missing'
