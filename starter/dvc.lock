@@ -1,0 +1,66 @@
+schema: '2.0'
+stages:
+  preprocessing:
+    cmd: python starter/ml/data.py
+    deps:
+    - path: data/census.csv
+      hash: md5
+      md5: 145de00f6e6053d3f7044628f9a5b5ff
+      size: 3974474
+    - path: starter/ml/data.py
+      hash: md5
+      md5: 44fbc4be1b2880919a034827ea10e1d6
+      size: 700
+    outs:
+    - path: data/clean_census.gz
+      hash: md5
+      md5: 6f3222faa7b9a0d10880d14b64be98a8
+      size: 396707
+  train:
+    cmd: python starter/train_model.py
+    deps:
+    - path: data/clean_census.gz
+      hash: md5
+      md5: e72bd8efd945522110be57c0a267e56a
+      size: 396707
+    - path: starter/train_model.py
+      hash: md5
+      md5: 28d20b844b2f97594b15c0304950d401
+      size: 1234
+    params:
+      parameters.yaml:
+        model.parameters.C: 1.0
+        model.parameters.penalty: l2
+    outs:
+    - path: model/logistic_regression.pkl
+      hash: md5
+      md5: 44a83c63f608c6fc13570eb84a21c50b
+      size: 5314
+    - path: model/score.json
+      hash: md5
+      md5: ae9efadf5ac6f0c075edede9f3464234
+      size: 106
+  train_model:
+    cmd: python starter/train_model.py
+    deps:
+    - path: data/clean_census.gz
+      hash: md5
+      md5: 6f3222faa7b9a0d10880d14b64be98a8
+      size: 396707
+    - path: starter/train_model.py
+      hash: md5
+      md5: 53493d5f7d667dbf4afd6ff407d5a2e7
+      size: 1371
+    params:
+      parameters.yaml:
+        model.parameters.C: 1.0
+        model.parameters.penalty: l2
+    outs:
+    - path: model/logistic_regression.pkl
+      hash: md5
+      md5: f84d6cf3e2cb6553fb4f0b9a088c35a7
+      size: 5314
+    - path: model/score.json
+      hash: md5
+      md5: ae9efadf5ac6f0c075edede9f3464234
+      size: 106

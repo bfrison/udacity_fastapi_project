@@ -22,5 +22,5 @@ jobs:
     - name: Run unit tests on repository
       run: |
         cd starter
-        dvc repro
+        dvc pull
         pytest test_model.py
