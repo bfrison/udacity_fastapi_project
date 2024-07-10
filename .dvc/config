@@ -2,3 +2,4 @@
     remote = gdrive
 ['remote "gdrive"']
     url = gdrive://1tIVyDqvGQwa2HM4q9mqp7skMTb6ZK_Ra/fastapi_project
+    gdrive_use_service_account = true
