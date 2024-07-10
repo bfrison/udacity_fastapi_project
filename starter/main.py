@@ -1,3 +1,7 @@
+'''
+This script defines the API which exposes the machine learning model
+'''
+
 import os
 import pickle
 
@@ -10,6 +14,11 @@ from starter.ml.model import inference
 
 
 class CensusEntry(BaseModel):
+    '''
+    Pydantic model mirroring a DataFrame row which is used for inference in the
+    machine learning model
+    '''
+
     age: int
     workclass: str
     education_num: int = Field(alias='education-num')
@@ -32,12 +41,18 @@ with open(os.path.join('model', 'logistic_regression.pkl'), 'rb') as f:
 
 @app.get('/')
 async def greet() -> str:
+    '''
+    This get method greets the client in plain text
+    '''
     return PlainTextResponse('Welcome to the salary predictor!')
 
 
 @app.post('/infer/')
 async def infer_salary(entries: list[CensusEntry]) -> list[str]:
-
+    '''
+    This post method accepts a DataFrame in json format (orient='records') and
+    returns a list of salary predictions
+    '''
     df = pd.DataFrame([entry.model_dump(by_alias=True) for entry in entries])
 
     y_pred = inference(model, df)
