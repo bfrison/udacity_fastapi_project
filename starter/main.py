@@ -20,17 +20,17 @@ class CensusEntry(BaseModel):
     '''
 
     age: int
-    workclass: str
+    workclass: str | None
     education_num: int = Field(alias='education-num')
     marital_status: str = Field(alias='marital-status')
-    occupation: str
+    occupation: str | None
     relationship: str
     race: str
     sex: str
     capital_gain: int = Field(alias='capital-gain')
     capital_loss: int = Field(alias='capital-loss')
     hours_per_weel: int = Field(alias='hours-per-week')
-    native_country: str = Field(alias='native-country')
+    native_country: str | None = Field(alias='native-country')
 
 
 app = FastAPI()
