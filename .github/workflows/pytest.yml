@@ -16,7 +16,6 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        cd starter
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run unit tests on repository
