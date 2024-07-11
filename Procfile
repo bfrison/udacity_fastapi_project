@@ -1,1 +1,2 @@
-web: uvicorn starter/main:app
+release: dvc pull
+web: gunicorn --chdir starter -k uvicorn.workers.UvicornWorker main:app
