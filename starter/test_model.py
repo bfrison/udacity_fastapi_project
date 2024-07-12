@@ -152,6 +152,30 @@ def test_infer(client, df_clean, trained_pipeline):
     ).all(), 'Response predictions do not match model\'s predictions'
 
 
+def test_infer_less_than_50k(client, df_clean):
+    '''
+    This test ensures the inference properly returns '<=50K' when expected
+    '''
+    data = df_clean.iloc[:1].to_dict(orient='records')
+
+    response = client.post('/infer/', json=data)
+
+    assert response.status_code == 200
+    assert response.json()[0] == '<=50K'
+
+
+def test_infer_more_than_50k(client, df_clean):
+    '''
+    This test ensures the inference properly returns '>50K' when expected
+    '''
+    data = df_clean.iloc[4:5].to_dict(orient='records')
+
+    response = client.post('/infer/', json=data)
+
+    assert response.status_code == 200
+    assert response.json()[0] == '>50K'
+
+
 def test_infer_missing_col(client, df_clean):
     '''
     This test ensures the API properly returns a 422 error when a column is
