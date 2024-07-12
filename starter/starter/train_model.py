@@ -12,7 +12,12 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import yaml
 
-from ml.model import compute_model_metrics, create_pipeline, score_strata, train_model
+from ml.model import (
+    compute_model_metrics,
+    create_pipeline,
+    score_strata,
+    train_model,
+)
 
 with open('parameters.yaml', encoding='utf-8') as f:
     params = yaml.safe_load(f)
@@ -45,7 +50,9 @@ if __name__ == '__main__':
     with open(os.path.join('model', 'score.json'), 'w', encoding='utf-8') as f:
         json.dump(scores, f)
 
-    with open(os.path.join('model', 'strata_score.json'), 'w', encoding='utf-8') as f:
+    with open(
+        os.path.join('model', 'strata_score.json'), 'w', encoding='utf-8'
+    ) as f:
         json.dump(strata_scores, f)
 
     with open(os.path.join('model', 'logistic_regression.pkl'), 'wb') as f:
