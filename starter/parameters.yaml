@@ -14,6 +14,10 @@ columns:
     - capital-gain
     - capital-loss
     - hours-per-week
+  strata:
+    - workclass
+    - race
+    - sex
 model:
   parameters:
     C: 1.0
