@@ -30,8 +30,29 @@ class CensusEntry(BaseModel):
     sex: str
     capital_gain: int = Field(alias='capital-gain')
     capital_loss: int = Field(alias='capital-loss')
-    hours_per_weel: int = Field(alias='hours-per-week')
+    hours_per_week: int = Field(alias='hours-per-week')
     native_country: str | None = Field(alias='native-country')
+
+    model_config = {
+        'json_schema_extra': {
+            'examples': [
+                {
+                    'age': 24,
+                    'workclass': 'Private',
+                    'education-num': 13,
+                    'marital-status': 'Married-civ-spouse',
+                    'occupation': 'Craft-repair',
+                    'relationship': 'Husband',
+                    'race': 'White',
+                    'sex': 'Male',
+                    'capital-gain': 0,
+                    'capital-loss': 0,
+                    'hours-per-wekk': 40,
+                    'native-country': 'United-States',
+                }
+            ]
+        }
+    }
 
 
 model_path = os.path.join('model', 'logistic_regression.pkl')
